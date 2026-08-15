@@ -1,0 +1,29 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+html { scroll-behavior: smooth; }
+body { background: #F8F5EE; color: #1a1a2e; font-family: 'Inter', Arial, sans-serif; }
+::selection { background: #D4AF37; color: #fff; }
+
+.container-x { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; }
+.section      { @apply py-16 md:py-24; }
+.eyebrow      { @apply text-[11px] font-bold uppercase tracking-[.28em] text-emerald-700; }
+.gold-line    { width: 44px; height: 3px; background: linear-gradient(90deg, #D4AF37, #f0d060); border-radius: 4px; }
+.glass        { background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); border: 1px solid rgba(212,175,55,0.2); }
+.prose-academy p { @apply leading-8 text-slate-600; }
+
+.bg-cream       { background-color: #F8F5EE; }   /* кремовый — about, gallery */
+.bg-cream-2     { background-color: #EDE8DC; }   /* темнее кремовый — features, teachers */
+.bg-cream-light { background-color: #FDFCF9; }   /* почти белый — contact */
+.bg-dark        { background-color: #0F1B35; }
+.bg-dark-2      { background-color: #162040; }
+
+.card-light { background: #fff; border: 1px solid rgba(212,175,55,0.18); box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+.card-light:hover { border-color: rgba(212,175,55,0.5); box-shadow: 0 8px 32px rgba(212,175,55,0.12); }
+
+.shadow-gold    { box-shadow: 0 8px 32px rgba(212,175,55,0.25); }
+.shadow-card    { box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+.shadow-luxury  { box-shadow: 0 20px 60px rgba(15,59,120,0.12); }

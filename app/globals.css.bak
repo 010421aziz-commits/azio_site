@@ -1,0 +1,2 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+html{scroll-behavior:smooth} body{background:#FAFAF8;color:#1F2937} ::selection{background:#D4AF37;color:#fff}.container-x{@apply mx-auto w-full max-w-7xl px-5 sm:px-8}.section{@apply py-20 md:py-28}.eyebrow{@apply text-xs font-bold uppercase tracking-[.22em] text-gold}.nav-link{@apply text-sm font-medium text-slate-600 transition hover:text-navy}.gold-line{width:54px;height:2px;background:#D4AF37}.glass{@apply border border-white/20 bg-white/10 backdrop-blur-md}.prose-academy p{@apply leading-8 text-slate-600}
