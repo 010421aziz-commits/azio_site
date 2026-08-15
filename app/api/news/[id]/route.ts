@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireAdmin, UnauthorizedError } from '@/lib/auth';
+import { requireAdmin } from '@/lib/auth';
 import { z } from 'zod';
+import { apiErrorResponse } from '@/lib/api-errors';
 
 const schema = z.object({ title: z.string().min(3), slug: z.string().min(3).regex(/^[a-z0-9-]+$/), excerpt: z.string().min(10), content: z.string().min(20), image: z.string().optional(), published: z.boolean() });
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) { try { await requireAdmin(request); const data = schema.parse(await request.json()); return NextResponse.json(await prisma.news.update({ where: { id: (await params).id }, data: { ...data, publishedAt: data.published ? new Date() : null } })); } catch (error) { if (error instanceof UnauthorizedError) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); return NextResponse.json({ error: 'Unable to update news item' }, { status: 400 }); } }
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) { try { await requireAdmin(request); await prisma.news.delete({ where: { id: (await params).id } }); return NextResponse.json({ ok: true }); } catch (error) { if (error instanceof UnauthorizedError) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); return NextResponse.json({ error: 'Unable to delete news item' }, { status: 400 }); } }
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) { try { await requireAdmin(request); const data = schema.parse(await request.json()); return NextResponse.json(await prisma.news.update({ where: { id: (await params).id }, data: { ...data, publishedAt: data.published ? new Date() : null } })); } catch (error) { return apiErrorResponse(error, 'Unable to update news item'); } }
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) { try { await requireAdmin(request); await prisma.news.delete({ where: { id: (await params).id } }); return NextResponse.json({ ok: true }); } catch (error) { return apiErrorResponse(error, 'Unable to delete news item'); } }

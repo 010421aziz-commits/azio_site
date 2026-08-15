@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { randomUUID } from 'crypto';
-import { requireAdmin, UnauthorizedError } from '@/lib/auth';
+import { requireAdmin } from '@/lib/auth';
+import { apiErrorResponse } from '@/lib/api-errors';
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,5 +19,5 @@ export async function POST(req: NextRequest) {
     const filename = `${randomUUID()}.${ext}`;
     await writeFile(path.join(folder, filename), Buffer.from(await file.arrayBuffer()));
     return NextResponse.json({ url: `/uploads/${filename}` }, { status: 201 });
-  } catch (error) { if (error instanceof UnauthorizedError) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }); return NextResponse.json({ error: 'Жүктөө ишке ашкан жок' }, { status: 400 }); }
+  } catch (error) { return apiErrorResponse(error, 'Upload failed'); }
 }
