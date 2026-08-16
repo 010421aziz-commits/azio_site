@@ -1,19 +1,21 @@
 ﻿'use client';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const links = [['Биз жөнүндө','#about'],['Программалар','#programs'],['Устаздар','#teachers'],['Галерея','#gallery'],['Байланыш','#contact']];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [logo, setLogo] = useState('/images/logo.png');
+  useEffect(() => { fetch('/api/site-settings', { cache: 'no-store' }).then((response) => response.ok ? response.json() : null).then((settings) => settings?.logo && setLogo(settings.logo)).catch(() => undefined); }, []);
   return (
     <header className={"fixed z-50 w-full shadow-card"}
       style={{ background: 'rgba(248,245,238,0.92)', backdropFilter: 'blur(18px)' }}>
       <div className="container-x flex h-14 items-center justify-between">
         <a href="#top" className="flex items-center gap-3 group">
           <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-gold/50 shadow-gold transition group-hover:border-gold">
-            <Image src="/images/logo.png" alt="Quran Academy" fill className="object-cover" sizes="44px" />
+            <Image src={logo} alt="Quran Academy" fill className="object-cover" sizes="44px" />
           </span>
           <span>
             <b className="block text-sm tracking-[.18em] text-navy">QURAN ACADEMY</b>

@@ -33,7 +33,7 @@ const fallbackTeachers = [
   { name: 'Насрулло каары', position: 'Медресенин мудуру', description: 'Окуу менен тарбияны айкалыштырган академиялык багыт.', image: '/images/mudur.jpeg', pos: 'center center' },
   { name: 'Абдулазиз каары', position: 'Устаз', description: 'Ижазасы бар устаз. Куран жаттоо жана тажвид сабактарын окутат.', image: '/images/ustaz2.jpeg', pos: 'center 35%' },
 ];
-const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
+const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', logo: '/images/logo.png', aboutImage: '/images/hero-graduation.png', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
 
 export default function Home() {
   const [showTop, setShowTop] = useState(false);
@@ -143,7 +143,7 @@ export default function Home() {
           <motion.div key="about-image" {...revealLeft} className="relative">
             <div className="absolute -inset-4 rounded-3xl opacity-50" style={{ background:'radial-gradient(ellipse, rgba(212,175,55,0.15), transparent 70%)' }} />
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-luxury border border-gold/10">
-              <Image src="/images/hero-graduation.png" alt="Куран Академия" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
+              <Image src={settings.aboutImage} alt="Куран Академия" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
               <div className="absolute inset-0" style={{ background:'linear-gradient(to top, rgba(15,27,53,0.5) 0%, transparent 50%)' }} />
             </div>
             <div className="absolute -bottom-5 -right-5 rounded-2xl border border-gold/30 bg-white px-5 py-4 shadow-gold">
