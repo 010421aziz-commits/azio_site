@@ -27,14 +27,30 @@ const programs: { title: string; description: string; topics: string[]; icon: Lu
   { title: 'Англис тили', description: 'Заманбап англис тилинин практикалык программасы.', topics: ['Grammar','Speaking','Reading','Listening'], icon: MessageCircle },
   { title: 'Диний сабактар', description: 'Негизги ислам илимдери.', topics: ['Фикх','Акыда','Хадис','Сира','Тафсир'], icon: Landmark },
 ];
-const teachers = [
+const fallbackTeachers = [
   { name: 'Насрулло каары', position: 'Медресенин мудуру', description: 'Окуу менен тарбияны айкалыштырган академиялык багыт.', image: '/images/mudur.jpeg', pos: 'center center' },
   { name: 'Абдулазиз каары', position: 'Устаз', description: 'Ижазасы бар устаз. Куран жаттоо жана тажвид сабактарын окутат.', image: '/images/ustaz2.jpeg', pos: 'center 35%' },
 ];
 
 export default function Home() {
   const [showTop, setShowTop] = useState(false);
+  const [teachers, setTeachers] = useState(fallbackTeachers);
   useEffect(() => { const s = () => setShowTop(window.scrollY > 500); window.addEventListener('scroll', s); return () => window.removeEventListener('scroll', s); }, []);
+  useEffect(() => {
+    fetch('/api/teachers', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((items) => {
+        if (!Array.isArray(items)) return;
+        setTeachers(items.map((teacher) => ({
+          name: teacher.name,
+          position: teacher.position,
+          description: teacher.bio || '',
+          image: teacher.image || '/images/hero-graduation.png',
+          pos: 'center center',
+        })));
+      })
+      .catch(() => undefined);
+  }, []);
 
   return (
     <main id="top" style={{ position: 'relative' }}>
