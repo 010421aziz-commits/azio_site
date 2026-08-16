@@ -46,7 +46,7 @@ export default function Home() {
       .then((response) => response.ok ? response.json() : null)
       .then((items) => {
         if (!Array.isArray(items)) return;
-        setTeachers(items.map((teacher) => ({
+        setTeachers(items.sort((a, b) => a.order - b.order).map((teacher) => ({
           name: teacher.name,
           position: teacher.position,
           description: teacher.bio || '',
