@@ -2,15 +2,25 @@
 
 import Image from 'next/image';
 import { X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const images = Array.from({ length: 5 }, (_, index) => ({
+const fallbackImages = Array.from({ length: 5 }, (_, index) => ({
   id: `academy-gallery-${index + 1}`,
   src: '/images/hero-graduation.png',
 }));
 
 export function Gallery() {
   const [selected, setSelected] = useState<string | null>(null);
+  const [images, setImages] = useState(fallbackImages);
+  useEffect(() => {
+    fetch('/api/gallery', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((items) => {
+        if (!Array.isArray(items) || items.length === 0) return;
+        setImages(items.map((item) => ({ id: item.id, src: item.image })));
+      })
+      .catch(() => undefined);
+  }, []);
   return <>
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       {images.map(({ id, src }, index) => <button key={id} onClick={() => setSelected(src)} className={`group relative overflow-hidden rounded-2xl ${index === 0 ? 'col-span-2 row-span-2 aspect-square' : 'aspect-[4/3]'}`}>

@@ -3,13 +3,16 @@ import { prisma } from '@/lib/prisma';
 import { contactSchema } from '@/lib/validators';
 
 export async function POST(req: Request) {
+  const requestId = crypto.randomUUID();
   let body: unknown;
-  try { body = await req.json(); } catch {
+  try { body = await req.json(); } catch (error) {
+    console.error('[contact] invalid JSON', { requestId, error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json({ error: 'Маалымат туура эмес' }, { status: 400 });
   }
   const parsed = contactSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: 'Маалымат туура эмес' }, { status: 400 });
+    console.warn('[contact] validation failed', { requestId, issues: parsed.error.issues.map(({ path, message, code }) => ({ path, message, code })) });
+    return NextResponse.json({ error: 'Маалымат туура эмес', requestId }, { status: 400 });
   }
   const data = parsed.data;
 
@@ -19,7 +22,8 @@ export async function POST(req: Request) {
     const chatId = process.env.TELEGRAM_CHAT_ID;
 
     if (!token || !chatId) {
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+      console.error('[contact] Telegram configuration is missing', { requestId, hasBotToken: Boolean(token), hasChatId: Boolean(chatId) });
+      return NextResponse.json({ error: 'Server configuration error', requestId }, { status: 500 });
     }
 
     const escapeHtml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -42,11 +46,19 @@ export async function POST(req: Request) {
     });
 
     if (!res.ok) {
-      return NextResponse.json({ error: 'Failed to send message' }, { status: 502 });
+      const telegramBody = await res.text();
+      console.error('[contact] Telegram rejected request', { requestId, status: res.status, body: telegramBody.slice(0, 500) });
+      return NextResponse.json({ error: 'Failed to send message', requestId }, { status: 502 });
     }
 
     return NextResponse.json({ ok: true }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: 'Failed to send message' }, { status: 502 });
+  } catch (error) {
+    console.error('[contact] unexpected failure', {
+      requestId,
+      name: error instanceof Error ? error.name : typeof error,
+      message: error instanceof Error ? error.message : String(error),
+      code: typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined,
+    });
+    return NextResponse.json({ error: 'Failed to send message', requestId }, { status: 502 });
   }
 }

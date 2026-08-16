@@ -1,5 +1,7 @@
 ﻿'use client';
 
+export const dynamic = 'force-dynamic';
+
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronRight, Instagram, Landmark, Languages, MapPin, MessageCircle, MoonStar, Phone, ScrollText, ShieldCheck, Sparkles, Users, type LucideIcon } from 'lucide-react';
@@ -20,7 +22,7 @@ const features: { title: string; icon: LucideIcon }[] = [
   { title: 'Англис тили', icon: MessageCircle }, { title: 'Диний сабактар', icon: Landmark },
   { title: 'Тажрыйбалуу устаздар', icon: Users }, { title: 'Ыйман жана тарбия', icon: ShieldCheck },
 ];
-const programs: { title: string; description: string; topics: string[]; icon: LucideIcon }[] = [
+const fallbackPrograms: { title: string; description: string; topics: string[]; icon: LucideIcon }[] = [
   { title: 'Куран жаттоо', description: 'Толук Куран жаттоо программасы.', topics: ['Толук жаттоо','Кайталоо','Тажвид'], icon: BookOpen },
   { title: 'Ижаза', description: 'Куранды санад менен окуу.', topics: ['Санад','Кыраат','Устаздык көзөмөл'], icon: ScrollText },
   { title: 'Араб тили', description: 'Куран тилин түшүнүүгө багытталган терең курс.', topics: ['Нахв','Сарф','Окуу','Жазуу','Сүйлөө'], icon: Languages },
@@ -31,10 +33,13 @@ const fallbackTeachers = [
   { name: 'Насрулло каары', position: 'Медресенин мудуру', description: 'Окуу менен тарбияны айкалыштырган академиялык багыт.', image: '/images/mudur.jpeg', pos: 'center center' },
   { name: 'Абдулазиз каары', position: 'Устаз', description: 'Ижазасы бар устаз. Куран жаттоо жана тажвид сабактарын окутат.', image: '/images/ustaz2.jpeg', pos: 'center 35%' },
 ];
+const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
 
 export default function Home() {
   const [showTop, setShowTop] = useState(false);
   const [teachers, setTeachers] = useState(fallbackTeachers);
+  const [programs, setPrograms] = useState(fallbackPrograms);
+  const [settings, setSettings] = useState(fallbackSettings);
   useEffect(() => { const s = () => setShowTop(window.scrollY > 500); window.addEventListener('scroll', s); return () => window.removeEventListener('scroll', s); }, []);
   useEffect(() => {
     fetch('/api/teachers', { cache: 'no-store' })
@@ -48,6 +53,16 @@ export default function Home() {
           image: teacher.image || '/images/hero-graduation.png',
           pos: 'center center',
         })));
+      })
+      .catch(() => undefined);
+  }, []);
+  useEffect(() => { fetch('/api/site-settings', { cache: 'no-store' }).then((response) => response.ok ? response.json() : null).then((value) => value && setSettings(value)).catch(() => undefined); }, []);
+  useEffect(() => {
+    fetch('/api/programs', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((items) => {
+        if (!Array.isArray(items) || items.length === 0) return;
+        setPrograms(items.map((program) => ({ title: program.title, description: program.description, topics: program.topics || [], icon: BookOpen })));
       })
       .catch(() => undefined);
   }, []);
@@ -76,18 +91,18 @@ export default function Home() {
             <motion.p initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.2 }}
               className="mb-6 inline-flex items-center gap-3 rounded-full border border-gold/40 px-4 py-1.5 text-[11px] font-bold tracking-[.22em] text-gold uppercase"
               style={{ background: 'rgba(212,175,55,0.1)' }}>
-              <span className="h-1 w-1 rounded-full bg-gold" />БИШКЕК · КЫРГЫЗСТАН
+              <span className="h-1 w-1 rounded-full bg-gold" />{settings.heroLocation}
             </motion.p>
             <motion.h1 initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.3, duration:0.8 }}
               className="text-3xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-7xl">
-              Куран<br />
-              <span style={{ background:'linear-gradient(135deg,#D4AF37 0%,#f5d875 50%,#D4AF37 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>Академия</span>
+              {settings.heroTitle.split(' ')[0]}<br />
+              <span style={{ background:'linear-gradient(135deg,#D4AF37 0%,#f5d875 50%,#D4AF37 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>{settings.heroTitle.split(' ').slice(1).join(' ')}</span>
             </motion.h1>
             <motion.p initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.45 }} className="mt-6 text-lg font-medium text-white/80 sm:text-xl">
-              Куран жаттоо жана ижаза алуу медресеси
+              {settings.heroSubtitle}
             </motion.p>
             <motion.p initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.55 }} className="mt-4 max-w-xl text-base leading-8 text-white/60">
-              Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.
+              {settings.heroDescription}
             </motion.p>
             <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.65 }} className="mt-10 flex flex-wrap gap-3">
               <a href="#about" className="rounded-xl bg-gold px-7 py-3.5 text-sm font-bold text-dark hover:bg-yellow-400 transition-colors duration-300">Биз жөнүндө</a>
@@ -104,7 +119,7 @@ export default function Home() {
       {/* ── FEATURES ── */}
       <section id="features" className="section bg-cream-2">
         <div className="container-x">
-          <SectionHeading center eyebrow="Ар тараптуу билим" title="Илим, адеп жана ишеним бир жерде" copy="Ар бир сабак окуучунун Куранга болгон байланышын бекемдеп, келечегине жол ачат." />
+          <SectionHeading center eyebrow="Ар тараптуу билим" title={settings.featuresTitle} copy="Ар бир сабак окуучунун Куранга болгон байланышын бекемдеп, келечегине жол ачат." />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {features.map(({ title, icon: Icon }, i) => (
               <motion.div key={title} {...reveal} transition={{ ...reveal.transition, delay: i*0.07 }}
@@ -137,13 +152,12 @@ export default function Home() {
             </div>
           </motion.div>
           <motion.div key="about-text" {...revealRight}>
-            <SectionHeading eyebrow="Биз жөнүндө" title="Курандын нуру менен тарбияланган муун" />
+            <SectionHeading eyebrow="Биз жөнүндө" title={settings.aboutTitle} />
             <div className="prose-academy space-y-5">
-              <p>Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.</p>
-              <p>Максатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.</p>
+              {settings.aboutText.split('\n').map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
             <div className="mt-8 grid grid-cols-2 gap-4">
-              {[['500+','Окуучу'],['10+','Устаз'],['5','Программа'],['100%','Берилгендик']].map(([num,label]) => (
+              {settings.stats.map(({ value: num, label }) => (
                 <div key={label} className="rounded-2xl border border-gold/20 bg-white px-5 py-4 shadow-card">
                   <p className="text-2xl font-extrabold text-gold">{num}</p>
                   <p className="mt-0.5 text-xs text-slate-500">{label}</p>
@@ -157,7 +171,7 @@ export default function Home() {
       {/* ── PROGRAMS ── */}
       <section id="programs" className="section bg-cream">
         <div className="container-x">
-          <SectionHeading center eyebrow="Окуу багыттары" title="Ар бир кадам үчүн так программа" />
+          <SectionHeading center eyebrow="Окуу багыттары" title={settings.programsTitle} />
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {programs.map(({ title, description, topics, icon: Icon }, index) => (
               <motion.article key={title} {...reveal} transition={{ ...reveal.transition, delay: index*0.08 }}
@@ -188,7 +202,7 @@ export default function Home() {
       <section id="teachers" className="section bg-cream-2">
         
         <div className="container-x relative z-10">
-          <SectionHeading center eyebrow="Устаздар" title="Илимди аманат катары жеткирген устаздар" />
+          <SectionHeading center eyebrow="Устаздар" title={settings.teachersTitle} />
           <div className="grid gap-6 sm:grid-cols-2 max-w-2xl mx-auto">
             {teachers.map(teacher => (
               <motion.article key={teacher.name} {...reveal} className="overflow-hidden rounded-3xl border border-gold/20 bg-white shadow-card hover:border-gold/50 hover:shadow-gold transition-all duration-300">
@@ -212,7 +226,7 @@ export default function Home() {
       {/* ── GALLERY ── */}
       <section id="gallery" className="section bg-cream">
         <div className="container-x">
-          <SectionHeading center eyebrow="Академиянын жашоосу" title="Галерея" copy="Илим жолундагы күндөрдөн ирмемдер." />
+          <SectionHeading center eyebrow="Академиянын жашоосу" title={settings.galleryTitle} copy="Илим жолундагы күндөрдөн ирмемдер." />
           <Gallery />
         </div>
       </section>
@@ -224,7 +238,7 @@ export default function Home() {
             <ContactForm />
           </motion.div>
           <motion.div {...revealRight}>
-            <SectionHeading eyebrow="Байланыш" title="Сизди Академияда күтөбүз" />
+            <SectionHeading eyebrow="Байланыш" title={settings.contactTitle} />
             <div className="space-y-3">
               <a href="https://go.2gis.com/WW0vm" target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-4 rounded-2xl bg-white border border-gold/15 p-4 shadow-card hover:border-gold/40 hover:shadow-gold transition-all group">

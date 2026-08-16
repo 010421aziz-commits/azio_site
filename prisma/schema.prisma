@@ -64,6 +64,23 @@ model Setting {
   updatedAt DateTime @updatedAt
 }
 
+model SiteSettings {
+  id             String   @id @default("main")
+  heroLocation   String
+  heroTitle      String
+  heroSubtitle   String
+  heroDescription String
+  aboutTitle     String
+  aboutText      String
+  featuresTitle  String
+  programsTitle  String
+  teachersTitle  String
+  galleryTitle   String
+  contactTitle   String
+  stats          Json
+  updatedAt      DateTime @updatedAt
+}
+
 model Contact {
   id        String   @id @default(cuid())
   address   String

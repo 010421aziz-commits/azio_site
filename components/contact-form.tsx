@@ -15,8 +15,9 @@ export function ContactForm() {
     setStatus('idle');
     try {
       const r = await fetch('/api/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+      if (!r.ok) console.error('[contact form] API request failed', { status: r.status, response: await r.clone().json().catch(() => null) });
       if (r.ok) { setStatus('success'); reset(); } else { setStatus('error'); }
-    } catch { setStatus('error'); }
+    } catch (error) { console.error('[contact form] network error', error); setStatus('error'); }
   };
 
   const input = 'w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/20';
