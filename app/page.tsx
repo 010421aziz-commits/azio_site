@@ -101,7 +101,7 @@ export default function Home() {
             <motion.p initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.45 }} className="mt-6 text-lg font-medium text-white/80 sm:text-xl">
               {settings.heroSubtitle}
             </motion.p>
-            <motion.p initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.55 }} className="mt-4 max-w-xl text-base leading-8 text-white/60">
+            <motion.p initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.55 }} className="mt-5 max-w-2xl rounded-xl border border-white/10 bg-navy/25 px-4 py-3 text-lg font-medium leading-8 text-white/90 shadow-sm sm:px-5 sm:py-4 sm:text-xl sm:leading-9">
               {settings.heroDescription}
             </motion.p>
             <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.65 }} className="mt-10 flex flex-wrap gap-3">
