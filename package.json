@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "start": "next start",
+    "start": "prisma migrate deploy && npm run db:ensure-admin && next start",
     "lint": "next lint",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:ensure-admin": "tsx prisma/ensure-admin.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

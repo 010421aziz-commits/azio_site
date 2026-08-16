@@ -10,6 +10,8 @@ Production-ready Quran Academy website built with Next.js 15, TypeScript, Tailwi
 4. Seed the admin account and academy information: `npm run db:seed`.
 5. Start locally: `npm run dev`.
 
+For production startup, set `ADMIN_EMAIL` (defaults to `010421aziz@gmail.com`) and a strong `ADMIN_PASSWORD` in the deployment environment. The `start` script applies pending migrations and creates the admin account only when that email does not already exist; it never overwrites an existing admin password.
+
 Initial admin account: `admin@quranacademy.kg` / `ChangeMe123!`. Change this credential before deployment.
 
 ## Content management
