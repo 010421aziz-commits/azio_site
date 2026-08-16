@@ -4,30 +4,28 @@ import Image from 'next/image';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const fallbackImages = Array.from({ length: 5 }, (_, index) => ({
-  id: `academy-gallery-${index + 1}`,
-  src: '/images/hero-graduation.png',
-}));
-
 export function Gallery() {
   const [selected, setSelected] = useState<string | null>(null);
-  const [images, setImages] = useState(fallbackImages);
+  const [images, setImages] = useState<{ id: string; src: string }[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     fetch('/api/gallery', { cache: 'no-store' })
       .then((response) => response.ok ? response.json() : null)
       .then((items) => {
-        if (!Array.isArray(items) || items.length === 0) return;
-        setImages(items.map((item) => ({ id: item.id, src: item.image })));
+        setImages(Array.isArray(items) ? items.filter((item) => typeof item?.image === 'string' && item.image.trim()).map((item) => ({ id: item.id, src: item.image })) : []);
       })
-      .catch(() => undefined);
+      .catch(() => setImages([]))
+      .finally(() => setLoading(false));
   }, []);
   return <>
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    {loading && <p className="py-10 text-center text-sm text-slate-400">Галерея жүктөлүүдө...</p>}
+    {!loading && images.length === 0 && <p className="py-10 text-center text-sm text-slate-400">Галереяда азырынча сүрөттөр жок.</p>}
+    {!loading && images.length > 0 && <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       {images.map(({ id, src }, index) => <button key={id} onClick={() => setSelected(src)} className={`media-frame group rounded-2xl ${index === 0 ? 'media-frame-gallery--featured col-span-2 row-span-2' : 'media-frame-gallery'}`}>
         {src ? <img src={src} alt="Куран Академиянын жашоосу" className="media-cover transition duration-500 group-hover:scale-110" /> : <span className="grid h-full place-items-center text-sm text-slate-400">Фото отсутствует</span>}
         <span className="absolute inset-0 bg-navy/0 transition group-hover:bg-navy/25" />
       </button>)}
-    </div>
+    </div>}
     {selected && <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-slate-950/90 p-5" onClick={() => setSelected(null)}>
       <button aria-label="Жабуу" className="absolute right-6 top-6 text-white"><X size={32} /></button>
       <img onClick={(event) => event.stopPropagation()} src={selected} alt="Галерея" className="max-h-[85vh] w-auto rounded-xl object-contain" />
