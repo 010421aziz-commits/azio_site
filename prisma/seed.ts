@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client'; import bcrypt from 'bcryptjs';
 const db = new PrismaClient();
-async function main() { const password = await bcrypt.hash('Azio2104', 12); await db.admin.upsert({ where:{email:'010421aziz@gmail.com'}, update:{password}, create:{email:'010421aziz@gmail.com',password,name:'Quran Academy'} });
+const adminEmail = process.env.ADMIN_EMAIL || '010421aziz@gmail.com';
+const adminPassword = process.env.ADMIN_PASSWORD || 'Azio2104';
+async function main() { const password = await bcrypt.hash(adminPassword, 12); await db.admin.upsert({ where:{email:adminEmail}, update:{password}, create:{email:adminEmail,password,name:'Quran Academy'} });
  await db.contact.upsert({where:{id:'academy-contact'},update:{},create:{id:'academy-contact',address:'Бишкек шаары, Кызыл-Адыр 156',phone:'+996 501 041 617',instagram:'https://www.instagram.com/quranacademy.kg'}});
  const teachers = [
   {id:'teacher-0',name:'Насрулло каары',position:'Медресенин мудуру',bio:'Окуу менен тарбияны айкалыштырган академиялык багыт.',image:'/images/mudur.jpeg',order:0},
