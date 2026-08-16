@@ -141,7 +141,7 @@ export default function Home() {
           <motion.div key="about-image" {...revealLeft} className="relative">
             <div className="absolute -inset-4 rounded-3xl opacity-50" style={{ background:'radial-gradient(ellipse, rgba(212,175,55,0.15), transparent 70%)' }} />
             <div className="media-frame media-frame-about rounded-3xl shadow-luxury border border-gold/10 bg-cream-2">
-              {settings.aboutImage ? <Image src={settings.aboutImage} alt="Куран Академия" fill className="media-cover" sizes="(max-width:1024px) 100vw, 50vw" /> : <div className="grid h-full place-items-center px-8 text-center text-sm text-slate-400">Сүрөт жүктөлүүдө...</div>}
+              {settings.aboutImage ? <img src={settings.aboutImage} alt="Куран Академия" className="media-cover" /> : <div className="grid h-full place-items-center px-8 text-center text-sm text-slate-400">Сүрөт жүктөлүүдө...</div>}
               <div className="absolute inset-0" style={{ background:'linear-gradient(to top, rgba(15,27,53,0.5) 0%, transparent 50%)' }} />
             </div>
             <div className="absolute -bottom-5 -right-5 rounded-2xl border border-gold/30 bg-white px-5 py-4 shadow-gold">
@@ -205,7 +205,7 @@ export default function Home() {
             {teachers.map(teacher => (
               <motion.article key={teacher.name} {...reveal} className="overflow-hidden rounded-3xl border border-gold/20 bg-white shadow-card hover:border-gold/50 hover:shadow-gold transition-all duration-300">
                 <div className="media-frame media-frame-teacher">
-                  <Image src={teacher.image} alt={teacher.name} fill className="media-cover" sizes="(max-width:768px) 100vw, 50vw" style={{ objectPosition:teacher.pos }} />
+                  {teacher.image ? <img src={teacher.image} alt={teacher.name} className="media-cover" style={{ objectPosition:teacher.pos }} /> : <div className="grid h-full place-items-center text-sm text-slate-400">Фото отсутствует</div>}
                   <div className="absolute inset-0" style={{ background:'linear-gradient(to top, rgba(15,27,53,0.65) 0%, rgba(15,27,53,0.15) 55%, transparent 100%)' }} />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <p className="text-xs font-bold uppercase tracking-widest text-gold drop-shadow-sm">{teacher.position}</p>

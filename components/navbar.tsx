@@ -15,7 +15,7 @@ export function Navbar() {
       <div className="container-x flex h-14 items-center justify-between">
         <a href="#top" className="flex items-center gap-3 group">
           <span className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-gold/50 shadow-gold transition group-hover:border-gold">
-            <Image src={logo} alt="Quran Academy" fill className="object-cover" sizes="44px" />
+            {logo ? <img src={logo} alt="Quran Academy" className="h-full w-full object-cover" /> : <span className="grid h-full w-full place-items-center text-xs text-slate-400">Q</span>}
           </span>
           <span>
             <b className="block text-sm tracking-[.18em] text-navy">QURAN ACADEMY</b>
