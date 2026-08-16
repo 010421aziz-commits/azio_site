@@ -88,7 +88,7 @@ export function DashboardClient({ data }: { data: Data }) {
     finally { setLoading(false); }
   };
 
-  const list = tab === 'teachers' ? teachers : tab === 'programs' ? programs : gallery;
+  const list = (tab === 'teachers' ? teachers : tab === 'programs' ? programs : gallery) as Array<Teacher & Program & GalleryItem>;
   const stats = [['Устаздар', teachers.length, Users], ['Программалар', programs.length, BookOpen], ['Галерея', gallery.length, ImageIcon], ['Жаңы кабарлар', data.messages.length, Mail]] as const;
   const field = (name: keyof SiteSettings, label: string, multiline = false) => <label className="grid gap-1 text-sm font-semibold text-navy">{label}{multiline ? <textarea name={name} defaultValue={String(settings[name])} className="rounded-xl border p-3 font-normal" /> : <input type="text" name={name} defaultValue={String(settings[name])} placeholder="https://... или /images/..." className="rounded-xl border p-3 font-normal" />}</label>;
 
