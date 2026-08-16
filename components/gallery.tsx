@@ -23,8 +23,8 @@ export function Gallery() {
   }, []);
   return <>
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-      {images.map(({ id, src }, index) => <button key={id} onClick={() => setSelected(src)} className={`group relative overflow-hidden rounded-2xl ${index === 0 ? 'col-span-2 row-span-2 aspect-square' : 'aspect-[4/3]'}`}>
-        <Image src={src} alt="Куран Академиянын жашоосу" fill className="object-cover transition duration-500 group-hover:scale-110" sizes="(max-width: 768px) 50vw, 25vw" />
+      {images.map(({ id, src }, index) => <button key={id} onClick={() => setSelected(src)} className={`media-frame group rounded-2xl ${index === 0 ? 'media-frame-gallery--featured col-span-2 row-span-2' : 'media-frame-gallery'}`}>
+        <Image src={src} alt="Куран Академиянын жашоосу" fill className="media-cover transition duration-500 group-hover:scale-110" sizes="(max-width: 768px) 50vw, 25vw" />
         <span className="absolute inset-0 bg-navy/0 transition group-hover:bg-navy/25" />
       </button>)}
     </div>

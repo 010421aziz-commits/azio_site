@@ -13,7 +13,14 @@ body { background: #F8F5EE; color: #1a1a2e; font-family: 'Inter', Arial, sans-se
 .eyebrow      { @apply text-[11px] font-bold uppercase tracking-[.28em] text-emerald-700; }
 .gold-line    { width: 44px; height: 3px; background: linear-gradient(90deg, #D4AF37, #f0d060); border-radius: 4px; }
 .glass        { background: rgba(255,255,255,0.7); backdrop-filter: blur(16px); border: 1px solid rgba(212,175,55,0.2); }
-.prose-academy p { @apply leading-8 text-slate-600; }
+.prose-academy { max-width: 42rem; }
+.prose-academy p { @apply leading-8 text-slate-600; text-wrap: pretty; }
+.media-frame { position: relative; overflow: hidden; }
+.media-frame-about { aspect-ratio: 4 / 3; }
+.media-frame-gallery { aspect-ratio: 4 / 3; }
+.media-frame-gallery--featured { aspect-ratio: 1 / 1; }
+.media-frame-teacher { aspect-ratio: 4 / 3; }
+.media-cover { width: 100%; height: 100%; object-fit: cover; object-position: center; }
 
 .bg-cream       { background-color: #F8F5EE; }   /* кремовый — about, gallery */
 .bg-cream-2     { background-color: #EDE8DC; }   /* темнее кремовый — features, teachers */

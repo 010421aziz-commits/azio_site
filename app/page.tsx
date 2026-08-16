@@ -16,11 +16,11 @@ const reveal      = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1,
 const revealLeft  = { initial: { opacity: 0, x: -40 }, whileInView: { opacity: 1, x: 0 }, viewport: { once: true, amount: 0.2 }, transition: { duration: 0.7, ease: [0.22,1,0.36,1] } };
 const revealRight = { initial: { opacity: 0, x: 40 }, whileInView: { opacity: 1, x: 0 }, viewport: { once: true, amount: 0.2 }, transition: { duration: 0.7, ease: [0.22,1,0.36,1] } };
 
-const features: { title: string; icon: LucideIcon }[] = [
-  { title: 'Куран жаттоо', icon: BookOpen }, { title: 'Ижаза алуу', icon: ScrollText },
-  { title: 'Тажвид', icon: Sparkles }, { title: 'Араб тили', icon: Languages },
-  { title: 'Англис тили', icon: MessageCircle }, { title: 'Диний сабактар', icon: Landmark },
-  { title: 'Тажрыйбалуу устаздар', icon: Users }, { title: 'Ыйман жана тарбия', icon: ShieldCheck },
+const features: { title: string; copy: string; icon: LucideIcon }[] = [
+  { title: 'Куран жаттоо', copy: 'Этап-этабы менен түзүлгөн программа жана туруктуу кайталоо системасы.', icon: BookOpen }, { title: 'Ижаза алуу', copy: 'Санадга негизделген окуу жана устаздын жеке көзөмөлү.', icon: ScrollText },
+  { title: 'Тажвид', copy: 'Ар бир тамганы туура айтууга жана көркөм окууга көңүл бурабыз.', icon: Sparkles }, { title: 'Араб тили', copy: 'Курандын маанисин терең түшүнүүгө багытталган сабактар.', icon: Languages },
+  { title: 'Англис тили', copy: 'Заманбап билимге жол ачкан практикалык англис тили.', icon: MessageCircle }, { title: 'Диний сабактар', copy: 'Негизги ислам илимдери түшүнүктүү жана системалуу форматта.', icon: Landmark },
+  { title: 'Тажрыйбалуу устаздар', copy: 'Ар бир окуучуга көңүл бурган, тажрыйбалуу окутуучулар жамааты.', icon: Users }, { title: 'Ыйман жана тарбия', copy: 'Билимди адеп, жоопкерчилик жана жакшы мүнөз менен айкалыштырабыз.', icon: ShieldCheck },
 ];
 const fallbackPrograms: { title: string; description: string; topics: string[]; icon: LucideIcon }[] = [
   { title: 'Куран жаттоо', description: 'Толук Куран жаттоо программасы.', topics: ['Толук жаттоо','Кайталоо','Тажвид'], icon: BookOpen },
@@ -121,16 +121,14 @@ export default function Home() {
         <div className="container-x">
           <SectionHeading center eyebrow="Ар тараптуу билим" title={settings.featuresTitle} copy="Ар бир сабак окуучунун Куранга болгон байланышын бекемдеп, келечегине жол ачат." />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map(({ title, icon: Icon }, i) => (
+            {features.map(({ title, copy, icon: Icon }, i) => (
               <motion.div key={title} {...reveal} transition={{ ...reveal.transition, delay: i*0.07 }}
                 className="card-light group rounded-2xl p-6 transition-all duration-300">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy/8 text-navy group-hover:bg-gold/15 group-hover:text-gold transition-colors" style={{ background:'rgba(15,59,120,0.07)' }}>
                   <Icon size={20}/>
                 </div>
                 <h3 className="mt-5 font-semibold text-navy">{title}</h3>
-                <p className="mt-2 flex items-center gap-1.5 text-xs text-slate-400">
-                  <Check size={12} className="text-gold shrink-0"/>Терең жана сапаттуу окутуу
-                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-500">{copy}</p>
               </motion.div>
             ))}
           </div>
@@ -142,8 +140,8 @@ export default function Home() {
         <div className="container-x grid items-center gap-16 lg:grid-cols-2">
           <motion.div key="about-image" {...revealLeft} className="relative">
             <div className="absolute -inset-4 rounded-3xl opacity-50" style={{ background:'radial-gradient(ellipse, rgba(212,175,55,0.15), transparent 70%)' }} />
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-luxury border border-gold/10">
-              <Image src={settings.aboutImage} alt="Куран Академия" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
+            <div className="media-frame media-frame-about rounded-3xl shadow-luxury border border-gold/10">
+              <Image src={settings.aboutImage} alt="Куран Академия" fill className="media-cover" sizes="(max-width:1024px) 100vw, 50vw" />
               <div className="absolute inset-0" style={{ background:'linear-gradient(to top, rgba(15,27,53,0.5) 0%, transparent 50%)' }} />
             </div>
             <div className="absolute -bottom-5 -right-5 rounded-2xl border border-gold/30 bg-white px-5 py-4 shadow-gold">
@@ -206,8 +204,8 @@ export default function Home() {
           <div className="grid gap-6 sm:grid-cols-2 max-w-2xl mx-auto">
             {teachers.map(teacher => (
               <motion.article key={teacher.name} {...reveal} className="overflow-hidden rounded-3xl border border-gold/20 bg-white shadow-card hover:border-gold/50 hover:shadow-gold transition-all duration-300">
-                <div className="relative h-56 overflow-hidden">
-                  <Image src={teacher.image} alt={teacher.name} fill sizes="(max-width:768px) 100vw, 50vw" style={{ objectFit:'cover', objectPosition:teacher.pos }} />
+                <div className="media-frame media-frame-teacher">
+                  <Image src={teacher.image} alt={teacher.name} fill className="media-cover" sizes="(max-width:768px) 100vw, 50vw" style={{ objectPosition:teacher.pos }} />
                   <div className="absolute inset-0" style={{ background:'linear-gradient(to top, rgba(15,27,53,0.65) 0%, rgba(15,27,53,0.15) 55%, transparent 100%)' }} />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <p className="text-xs font-bold uppercase tracking-widest text-gold drop-shadow-sm">{teacher.position}</p>
