@@ -8,7 +8,7 @@ const schema = z.object({
   heroLocation: z.string().min(1), heroTitle: z.string().min(1), heroSubtitle: z.string().min(1), heroDescription: z.string().min(1),
   aboutTitle: z.string().min(1), aboutText: z.string().min(1), featuresTitle: z.string().min(1), programsTitle: z.string().min(1),
   teachersTitle: z.string().min(1), galleryTitle: z.string().min(1), contactTitle: z.string().min(1),
-  logo: z.string().min(1), aboutImage: z.string().min(1),
+  logo: z.string(), aboutImage: z.string(),
   stats: z.array(z.object({ value: z.string().min(1), label: z.string().min(1) })).length(4),
 });
 

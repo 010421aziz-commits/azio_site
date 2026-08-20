@@ -77,8 +77,8 @@ model SiteSettings {
   teachersTitle  String
   galleryTitle   String
   contactTitle   String
-  logo           String   @default("/images/logo.png")
-  aboutImage     String   @default("/images/hero-graduation.png")
+  logo           String   @default("")
+  aboutImage     String   @default("")
   stats          Json
   updatedAt      DateTime @updatedAt
 }

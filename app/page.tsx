@@ -2,7 +2,6 @@
 
 export const dynamic = 'force-dynamic';
 
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronRight, Instagram, Landmark, Languages, MapPin, MessageCircle, MoonStar, Phone, ScrollText, ShieldCheck, Sparkles, Users, type LucideIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -29,11 +28,9 @@ const fallbackPrograms: { title: string; description: string; topics: string[]; 
   { title: 'Англис тили', description: 'Заманбап англис тилинин практикалык программасы.', topics: ['Grammar','Speaking','Reading','Listening'], icon: MessageCircle },
   { title: 'Диний сабактар', description: 'Негизги ислам илимдери.', topics: ['Фикх','Акыда','Хадис','Сира','Тафсир'], icon: Landmark },
 ];
-const fallbackTeachers = [
-  { name: 'Насрулло каары', position: 'Медресенин мудуру', description: 'Окуу менен тарбияны айкалыштырган академиялык багыт.', image: '/images/mudur.jpeg', pos: 'center center' },
-  { name: 'Абдулазиз каары', position: 'Устаз', description: 'Ижазасы бар устаз. Куран жаттоо жана тажвид сабактарын окутат.', image: '/images/ustaz2.jpeg', pos: 'center 35%' },
-];
-const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', logo: '/images/logo.png', aboutImage: '', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
+type Teacher = { name: string; position: string; description: string; image: string; pos: string };
+const fallbackTeachers: Teacher[] = [];
+const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', logo: '', aboutImage: '', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
 
 export default function Home() {
   const [showTop, setShowTop] = useState(false);
@@ -50,7 +47,7 @@ export default function Home() {
           name: teacher.name,
           position: teacher.position,
           description: teacher.bio || '',
-          image: teacher.image || '/images/hero-graduation.png',
+          image: teacher.image || '',
           pos: 'center center',
         })));
       })
@@ -73,10 +70,7 @@ export default function Home() {
       <Navbar />
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen overflow-hidden">
-        <motion.div initial={{ scale: 1.08, opacity: 0.5 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1.8 }} className="absolute inset-0">
-          <Image src="/images/home.jpeg" alt="Куран Академия" fill priority className="object-cover" sizes="100vw" />
-        </motion.div>
+      <section className="relative min-h-screen overflow-hidden bg-navy">
         {/* тень */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(15,27,53,0.72) 0%, rgba(15,27,53,0.45) 55%, rgba(15,27,53,0.08) 100%)' }} />
         {/* исламский узор */}

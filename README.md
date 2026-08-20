@@ -24,6 +24,3 @@ Set `UPLOAD_PATH` to your persistent storage directory for a deployment target. 
 
 `npm run build` generates Prisma Client then builds the production app. Configure the same environment variables on Vercel, Railway, Render or your Supabase-connected host. Run `npm run db:push` as part of first deployment/database provisioning.
 
-## Image asset
-
-The default hero is at `public/images/hero-graduation.png`, generated for this project. Replace it from the content model when actual academy photography is available.

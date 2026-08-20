@@ -1,13 +1,12 @@
 ﻿'use client';
 import { Menu, X } from 'lucide-react';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const links = [['Биз жөнүндө','#about'],['Программалар','#programs'],['Устаздар','#teachers'],['Галерея','#gallery'],['Байланыш','#contact']];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-  const [logo, setLogo] = useState('/images/logo.png');
+  const [logo, setLogo] = useState('');
   useEffect(() => { fetch('/api/site-settings', { cache: 'no-store' }).then((response) => response.ok ? response.json() : null).then((settings) => settings?.logo && setLogo(settings.logo)).catch(() => undefined); }, []);
   return (
     <header className={"fixed z-50 w-full shadow-card"}
