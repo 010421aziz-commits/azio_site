@@ -70,6 +70,7 @@ model SiteSettings {
   heroTitle      String
   heroSubtitle   String
   heroDescription String
+  heroImage      String?  @default("")
   aboutTitle     String
   aboutText      String
   featuresTitle  String

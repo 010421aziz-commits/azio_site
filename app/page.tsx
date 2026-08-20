@@ -30,7 +30,7 @@ const fallbackPrograms: { title: string; description: string; topics: string[]; 
 ];
 type Teacher = { name: string; position: string; description: string; image: string; pos: string };
 const fallbackTeachers: Teacher[] = [];
-const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', logo: '', aboutImage: '', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
+const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', heroImage: '', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', logo: '', aboutImage: '', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
 
 export default function Home() {
   const [showTop, setShowTop] = useState(false);
@@ -71,6 +71,7 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <section className="relative min-h-screen overflow-hidden bg-navy">
+        {settings.heroImage && <div className="absolute inset-y-0 right-0 hidden w-[62%] lg:block"><img src={settings.heroImage} alt="Куран Академия" className="h-full w-full object-cover object-center" /><div className="absolute inset-0" style={{ background: 'linear-gradient(to right, #0f3b78 0%, rgba(15,59,120,0.72) 28%, transparent 58%)' }} /></div>}
         {/* тень */}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(15,27,53,0.72) 0%, rgba(15,27,53,0.45) 55%, rgba(15,27,53,0.08) 100%)' }} />
         {/* исламский узор */}
@@ -103,6 +104,7 @@ export default function Home() {
               <a href="#programs" className="rounded-xl border border-white/30 px-7 py-3.5 text-sm font-bold text-white hover:bg-white/10 transition-colors duration-300" style={{ background:'rgba(255,255,255,0.08)' }}>Программалар</a>
               <a href="#contact" className="flex items-center gap-1.5 rounded-xl px-5 py-3.5 text-sm font-bold text-gold/90 hover:text-gold transition-colors">Байланыш <ChevronRight size={15}/></a>
             </motion.div>
+            {settings.heroImage && <div className="relative mt-8 h-64 overflow-hidden rounded-2xl lg:hidden"><img src={settings.heroImage} alt="Куран Академия" className="h-full w-full object-cover" /><div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(15,59,120,0.55), transparent 55%)' }} /></div>}
           </motion.div>
         </div>
         <a href="#features" aria-label="Төмөн" className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 hover:text-gold transition-colors">

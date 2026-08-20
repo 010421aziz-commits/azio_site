@@ -5,7 +5,7 @@ import { apiErrorResponse } from '@/lib/api-errors';
 import { z } from 'zod';
 
 const schema = z.object({
-  heroLocation: z.string().min(1), heroTitle: z.string().min(1), heroSubtitle: z.string().min(1), heroDescription: z.string().min(1),
+  heroLocation: z.string().min(1), heroTitle: z.string().min(1), heroSubtitle: z.string().min(1), heroDescription: z.string().min(1), heroImage: z.string(),
   aboutTitle: z.string().min(1), aboutText: z.string().min(1), featuresTitle: z.string().min(1), programsTitle: z.string().min(1),
   teachersTitle: z.string().min(1), galleryTitle: z.string().min(1), contactTitle: z.string().min(1),
   logo: z.string(), aboutImage: z.string(),
