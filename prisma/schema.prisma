@@ -36,6 +36,15 @@ model Program {
   active      Boolean  @default(true)
 }
 
+model DailyRoutine {
+  id          Int      @id @default(autoincrement())
+  time        String
+  title       String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
 model Gallery {
   id        String   @id @default(cuid())
   image     String

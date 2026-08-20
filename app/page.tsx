@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { motion } from 'framer-motion';
-import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronRight, Instagram, Landmark, Languages, MapPin, MessageCircle, MoonStar, Phone, ScrollText, ShieldCheck, Sparkles, Users, type LucideIcon } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, BookOpen, Check, ChevronRight, Clock3, Instagram, Landmark, Languages, MapPin, MessageCircle, MoonStar, Phone, ScrollText, ShieldCheck, Sparkles, Users, type LucideIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Navbar } from '@/components/navbar';
 import { SectionHeading } from '@/components/section-heading';
@@ -29,6 +29,7 @@ const fallbackPrograms: { title: string; description: string; topics: string[]; 
   { title: 'Диний сабактар', description: 'Негизги ислам илимдери.', topics: ['Фикх','Акыда','Хадис','Сира','Тафсир'], icon: Landmark },
 ];
 type Teacher = { name: string; position: string; description: string; image: string; pos: string };
+type DailyRoutine = { id: number; time: string; title: string; description?: string | null; order: number };
 const fallbackTeachers: Teacher[] = [];
 const fallbackSettings = { heroLocation: 'БИШКЕК · КЫРГЫЗСТАН', heroTitle: 'Куран Академия', heroSubtitle: 'Куран жаттоо жана ижаза алуу медресеси', heroDescription: 'Куранды туура окууну, жаттоону жана ижаза алуу жолун үйрөтүүчү заманбап медресе.', heroImage: '', aboutTitle: 'Курандын нуру менен тарбияланган муун', aboutText: 'Куран Академия — Куран жаттоо жана ижаза берүү багытындагы медресе.\nМаксатыбыз — Куранды туура окуган, жаттаган, адеп-ахлакка тарбияланган жана пайдалуу илимге ээ болгон муунду тарбиялоо.', featuresTitle: 'Илим, адеп жана ишеним бир жерде', programsTitle: 'Ар бир кадам үчүн так программа', teachersTitle: 'Илимди аманат катары жеткирген устаздар', galleryTitle: 'Галерея', contactTitle: 'Сизди Академияда күтөбүз', logo: '', aboutImage: '', stats: [{ value: '500+', label: 'Окуучу' }, { value: '10+', label: 'Устаз' }, { value: '5', label: 'Программа' }, { value: '100%', label: 'Берилгендик' }] };
 
@@ -36,6 +37,7 @@ export default function Home() {
   const [showTop, setShowTop] = useState(false);
   const [teachers, setTeachers] = useState(fallbackTeachers);
   const [programs, setPrograms] = useState(fallbackPrograms);
+  const [routine, setRoutine] = useState<DailyRoutine[]>([]);
   const [settings, setSettings] = useState(fallbackSettings);
   useEffect(() => { const s = () => setShowTop(window.scrollY > 500); window.addEventListener('scroll', s); return () => window.removeEventListener('scroll', s); }, []);
   useEffect(() => {
@@ -63,6 +65,7 @@ export default function Home() {
       })
       .catch(() => undefined);
   }, []);
+  useEffect(() => { fetch('/api/daily-routine', { cache: 'no-store' }).then((response) => response.ok ? response.json() : []).then((items) => setRoutine(Array.isArray(items) ? items : [])).catch(() => undefined); }, []);
 
   return (
     <main id="top" style={{ position: 'relative' }}>
@@ -189,6 +192,13 @@ export default function Home() {
               </motion.article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="routine" className="section bg-cream-2">
+        <div className="container-x">
+          <SectionHeading center eyebrow="Күнүмдүк жашоо" title="Медресенин күн тартиби" copy="Ар бир күн билим, ибадат жана тарбия менен тартиптүү өтөт." />
+          {routine.length > 0 ? <div className="mx-auto grid max-w-4xl gap-3">{routine.map((item, index) => <motion.article key={item.id} {...reveal} transition={{ ...reveal.transition, delay: index * 0.06 }} className="grid gap-4 rounded-2xl border border-gold/15 bg-white p-5 shadow-card sm:grid-cols-[110px_1fr] sm:items-center"><div className="flex items-center gap-3 font-bold text-gold"><Clock3 size={20} /><time>{item.time}</time></div><div><h3 className="font-semibold text-navy">{item.title}</h3>{item.description && <p className="mt-1 text-sm leading-6 text-slate-500">{item.description}</p>}</div></motion.article>)}</div> : <p className="py-8 text-center text-sm text-slate-400">Күн тартиби жакында кошулат.</p>}
         </div>
       </section>
 
