@@ -1,64 +1,38 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { contactSchema } from '@/lib/validators';
+import { z } from 'zod';
 
-export async function POST(req: Request) {
-  const requestId = crypto.randomUUID();
+const submissionSchema = z.object({ answers: z.record(z.string(), z.string().max(2000)) });
+
+export async function POST(request: Request) {
   let body: unknown;
-  try { body = await req.json(); } catch (error) {
-    console.error('[contact] invalid JSON', { requestId, error: error instanceof Error ? error.message : String(error) });
-    return NextResponse.json({ error: 'Маалымат туура эмес' }, { status: 400 });
+  try { body = await request.json(); } catch { return NextResponse.json({ error: 'Маалымат туура эмес' }, { status: 400 }); }
+  const parsed = submissionSchema.safeParse(body);
+  if (!parsed.success) return NextResponse.json({ error: 'Маалымат туура эмес' }, { status: 400 });
+
+  const config = await prisma.formConfig.findUnique({ where: { id: 'main' }, include: { fields: { orderBy: { order: 'asc' } } } });
+  if (!config || config.fields.length === 0) return NextResponse.json({ error: 'Форма азырынча жеткиликтүү эмес' }, { status: 503 });
+
+  const answers: Record<string, string> = {};
+  for (const field of config.fields) {
+    const value = parsed.data.answers[field.name]?.trim() || '';
+    if (field.required && !value) return NextResponse.json({ error: 'Милдеттүү талааларды толтуруңуз' }, { status: 400 });
+    if (field.type === 'email' && value && !z.string().email().safeParse(value).success) return NextResponse.json({ error: 'Email туура эмес' }, { status: 400 });
+    answers[field.name] = value;
   }
-  const parsed = contactSchema.safeParse(body);
-  if (!parsed.success) {
-    console.warn('[contact] validation failed', { requestId, issues: parsed.error.issues.map(({ path, message, code }) => ({ path, message, code })) });
-    return NextResponse.json({ error: 'Маалымат туура эмес', requestId }, { status: 400 });
-  }
-  const data = parsed.data;
 
-  try {
-    await prisma.message.create({ data: { name: data.name, email: data.email || null, phone: data.phone, message: data.message } });
-    const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
+  await prisma.message.create({ data: { name: answers.name || '', email: answers.email || null, phone: answers.phone || '', message: answers.message || '', answers } });
 
-    if (!token || !chatId) {
-      console.error('[contact] Telegram configuration is missing', { requestId, hasBotToken: Boolean(token), hasChatId: Boolean(chatId) });
-      return NextResponse.json({ error: 'Server configuration error', requestId }, { status: 500 });
-    }
-
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (token && chatId) {
     const escapeHtml = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const text = [
-      '📩 <b>Жаңы кабар</b>',
-      '',
-      `👤 <b>Аты-жөнү:</b> ${escapeHtml(data.name)}`,
-      `📞 <b>Телефон:</b> ${escapeHtml(data.phone)}`,
-      data.email ? `📧 <b>Email:</b> ${escapeHtml(data.email)}` : null,
-      '',
-      `💬 <b>Кабар:</b>\n${escapeHtml(data.message)}`,
-    ]
-      .filter((line) => line !== null)
-      .join('\n');
-
-    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
-    });
-
-    if (!res.ok) {
-      const telegramBody = await res.text();
-      console.error('[contact] Telegram rejected request', { requestId, status: res.status, body: telegramBody.slice(0, 500) });
-      return NextResponse.json({ error: 'Failed to send message', requestId }, { status: 502 });
+    const text = ['<b>Жаңы кабар</b>', '', ...config.fields.filter((field) => answers[field.name]).map((field) => `<b>${escapeHtml(field.label)}:</b> ${escapeHtml(answers[field.name])}`)].join('\n');
+    try {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }) });
+    } catch (error) {
+      console.error('[contact] Telegram notification failed', error);
     }
-
-    return NextResponse.json({ ok: true }, { status: 201 });
-  } catch (error) {
-    console.error('[contact] unexpected failure', {
-      requestId,
-      name: error instanceof Error ? error.name : typeof error,
-      message: error instanceof Error ? error.message : String(error),
-      code: typeof error === 'object' && error !== null && 'code' in error ? error.code : undefined,
-    });
-    return NextResponse.json({ error: 'Failed to send message', requestId }, { status: 502 });
   }
+  return NextResponse.json({ ok: true }, { status: 201 });
 }

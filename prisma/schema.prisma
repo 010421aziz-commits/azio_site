@@ -98,6 +98,28 @@ model Message {
   email     String?
   phone     String
   message   String
+  answers   Json     @default("{}")
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model FormConfig {
+  id             String      @id @default("main")
+  title          String      @default("Бизге жазыңыз")
+  subtitle       String      @default("Суроолоруңузга жооп беребиз")
+  buttonText     String      @default("Кабар жөнөтүү")
+  successMessage String      @default("Кабарыңыз жөнөтүлдү. Жакында байланышабыз!")
+  fields         FormField[]
+  updatedAt      DateTime    @updatedAt
+}
+
+model FormField {
+  id       String   @id @default(cuid())
+  label    String
+  name     String   @unique
+  type     String
+  required Boolean  @default(false)
+  order    Int      @default(0)
+  configId String   @default("main")
+  config   FormConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
 }
